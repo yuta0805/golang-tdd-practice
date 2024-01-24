@@ -3,24 +3,36 @@ package main
 import "testing"
 
 func TestHello(t *testing.T) {
-    assertCorrectMessage := func(t testing.TB, got, want string) {
-        t.Helper() // テスト失敗時に行番号を報告するために必要
-        if got != want {
-            t.Errorf("got %q want %q", got, want)
-        }
-    }
-    // test内容をグループ化する
-    t.Run("saying hello to people", func(t *testing.T) {
-        got := Hello("Chris")
-        want := "Hello, Chris"
+    //*testing.T と *testing.B の両方が満たすインターフェースである testing.TB を受け入れると、テストやベンチマークからヘルパー関数を呼び出すことができるため、便利らしい。
+	assertCorrectMessage := func(t testing.TB, got, want string) {
+		t.Helper()
+		if got != want {
+			t.Errorf("got %q want %q", got, want)
+		}
+	}
 
-        assertCorrectMessage(t, got, want)
-    })
+	t.Run("to a person", func(t *testing.T) {
+		got := Hello("Chris", "")
+		want := "Hello, Chris"
+		assertCorrectMessage(t, got, want)
+	})
 
-    t.Run("say 'Hello world'", func(t *testing.T) {
-        got := Hello("")
-        want := "Hello, world"
+	t.Run("empty string", func(t *testing.T) {
+		got := Hello("", "")
+		want := "Hello, World"
+		assertCorrectMessage(t, got, want)
+	})
 
-        assertCorrectMessage(t, got, want)
-    })
+	t.Run("in Spanish", func(t *testing.T) {
+		got := Hello("Elodie", spanish)
+		want := "Hola, Elodie"
+		assertCorrectMessage(t, got, want)
+	})
+
+	t.Run("in French", func(t *testing.T) {
+		got := Hello("Lauren", french)
+		want := "Bonjour, Lauren"
+		assertCorrectMessage(t, got, want)
+	})
+
 }
